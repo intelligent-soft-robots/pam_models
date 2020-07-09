@@ -1,5 +1,7 @@
 #pragma once
 
+#include "pam_models/hill/contractile_element.hpp"
+
 namespace pam_models
 {
 
@@ -11,15 +13,15 @@ namespace pam_models
 
     public:
 
-      SerialDampingElement(double MP_SDE_D_SE,
-			   double MP_SDE_R_SE,
-			   double MP_CE_F_max,
-			   double MP_CE_A_rel0,
-			   double MP_CE_l_CEopt,
-			   double MP_CE_B_rel0)
+      SerialDampingElement(const ContractileElement& contractile_element,
+			   double MP_SDE_D_SE,
+			   double MP_SDE_R_SE)
 	: MP_SDE_D_SE_(MP_SDE_D_SE),
 	  MP_SDE_R_SE_(MP_SDE_R_SE),
-	  MP_SDE_d_SEmax_( MP_SDE_D_SE*( MP_CE_F_max* MP_CE_A_rel0)/( MP_CE_l_CEopt* MP_CE_B_rel0) )
+	  MP_SDE_d_SEmax_( MP_SDE_D_SE *
+			   ( contractile_element.MP_CE_F_max* MP_CE_A_rel0 )
+			   / ( contractile_element.MP_CE_l_CEopt *
+			       contractile_element.MP_CE_B_rel0) )
       {}
 
       // line 205
