@@ -41,6 +41,21 @@ namespace pam_models
 	return 0;
 
       }
+
+      double get_a_relative(double l_CE,
+			    double F_isom)
+      {
+	return ( 1.0*(l_CE<MP_CE_l_CEopt_) +
+		 F_isom*(l_CE>=MP_CE_l_CEopt_) )*MP_CE_A_rel0_*1/4*(1+3*a);
+      }
+
+      double get_b_relative()
+      {
+	return MP_CE_B_rel0*1*1/7*(3+4*a);
+      }
+
+	 
+      
     private:
       /*! F_max in [N] for Extensor (Kistemaker et al., 2006) */
       double MP_CE_F_max_;

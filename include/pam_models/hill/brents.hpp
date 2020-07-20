@@ -10,8 +10,8 @@ namespace pam_models
     double HillMuscle::brents_fun(std::function<double (double)> f,
 				  double lower,
 				  double upper,
-				  double tol,
-				  unsigned int max_iter)
+				  double tol=0.00000001,
+				  unsigned int max_iter=1000)
     {
       double a = lower;
       double b = upper;

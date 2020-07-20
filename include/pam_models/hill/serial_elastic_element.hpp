@@ -38,8 +38,9 @@ namespace pam_models
 	return f;
       }
 
-      double get_serial_elastic_element_force(double l_se)
+      double get_force(double l_MTC,double l_CE)
       {
+	double l_se = l_MTC-l_CE;
 	double f = (l_se>=l_nll_) * (deltaF_0_+k_l_*(l_se-l_nll_));
 	if (l_se>l_0_ && l_se<l_nll_)
 	  f+=k_nl_*(pow(l_se-l_0_, v_));
