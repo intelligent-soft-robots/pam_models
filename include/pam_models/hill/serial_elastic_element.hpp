@@ -1,5 +1,9 @@
 #pragma once
 
+#include <stdlib.h>
+#include <math.h>
+#include "pam_models/hill/contractile_element.hpp"
+
 namespace pam_models
 {
 
@@ -11,43 +15,20 @@ namespace pam_models
     public:
 
       SerialElasticElement(double l_0, double deltaU_nll,
-	  double deltaU_l, double deltaF_0)
-	: l_0_(l_0),
-	  deltaU_nll_(deltaU_nll),
-	  deltaU_l_(deltaU_l),
-	  deltaF_0_(deltaF_0),
-	  l_nll( (1 + deltaU_nll)* _l_0 ),
-	  v_( deltaU_nll/ deltaU_l ),
-	  k_nl_( deltaF_0
-		 / pow( deltaU_nll* _l_0,  _v_) ),
-	  k_l_( deltaF_0 / ( deltaU_l* _l_0) )
-      {}
-	
-
+			   double deltaU_l, double deltaF_0);
       double init_serial_elastic_element_force(double l_mtc,
-					       double l_ce)
-      {
-	double f;
-	double l = abs(l_mtc-l_ce);
-	if ((l>_l_0) && (l<l_nll_)) //non-linear part
-	  f = k_nl_* pow(l-l_0_, v_);
-	else if(l>=l_nll_) //linear part
-	  f = deltaF_0)+k_l_*(l-l_nll_);
-	else //slack length
-	  f = 0;
-	return f;
-      }
-
-      double get_force(double l_MTC,double l_CE)
-      {
-	double l_se = l_MTC-l_CE;
-	double f = (l_se>=l_nll_) * (deltaF_0_+k_l_*(l_se-l_nll_));
-	if (l_se>l_0_ && l_se<l_nll_)
-	  f+=k_nl_*(pow(l_se-l_0_, v_));
-	return f;
-      }
+					       double l_ce);
+      double get_force(double l_MTC,double l_CE);
 	
   private:
+
+      friend double init_muscle_force_equilibrium(double,
+						  const ParallelElasticElement&,
+						  const ContractileElement&,
+						  const SerialElasticElement&,
+						  double,
+						  double);
+      friend class Muscle;
 
     /** rest length of SEE in [m] (Kistemaker et al., 2006) */
     double l_0_;

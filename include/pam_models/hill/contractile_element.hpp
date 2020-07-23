@@ -1,11 +1,28 @@
 #pragma once
 
+#include <math.h>
+
 namespace pam_models
 {
 
   namespace hill
   {
 
+    // forward declaration for
+    // using friend keyword
+    class ParallelElasticElement;
+    class SerialDampingElement;
+    class Muscle;
+    class ContractileElement;
+    class SerialElasticElement;
+    double init_muscle_force_equilibrium(double,
+					 const ParallelElasticElement&,
+					 const ContractileElement&,
+					 const SerialElasticElement&,
+					 double,
+					 double);
+    
+    
     class ContractileElement
     {
     public:
@@ -13,50 +30,31 @@ namespace pam_models
 			 double MP_CE_l_CEopt,
 			 double MP_CE_DeltaW_limb_des,
 			 double MP_CE_DeltaW_limb_asc,
+			 double MP_CE_v_CElimb_des,
 			 double MP_CE_v_CElimb_asc,
 			 double MP_CE_A_rel0,
 			 double MP_CE_B_rel0,
 			 double MP_CE_S_eccentric,
-			 double MP_CE_F_eccentric)
-	: MP_CE_F_max_(f_max),
-	  MP_CE_l_CEopt_(MP_CE_l_CEopt),
-	  MP_CE_DeltaW_limb_des_(MP_CE_DeltaW_limb_des),
-	  MP_CE_DeltaW_limb_asc_(MP_CE_DeltaW_limb_asc),
-	  MP_CE_v_CElimb_des_(MP_CE_v_CElimb_des),
-	  MP_CE_v_CElimb_asc_(MP_CE_v_CElimb_asc),
-	  MP_CE_A_rel0_(MP_CE_A_rel0),
-	  MP_CE_B_rel0_(MP_CE_B_rel0),
-	  MP_CE_S_eccentric_(MP_CE_S_eccentric),
-	  MP_CE_F_eccentric_(MP_CE_F_eccentric),
-      {}
-      // line 153
-      double get_isometric_force(double l_CE)
-      {
-	if (MP_CE_l_CEopt_<=l_CE)
-		return ( exp( - pow( abs(  ((l_CE/MP_CE_l_CEopt_)-1)/MP_CE_DeltaW_limb_des_  ),
-				     MP_CE_v_CElimb_des ) ));
-	if(MP_CE_l_CEopt>l_CE && MP_CE_l_CEopt>l_CE)
-		return ( exp( - pow( abs(  ((l_CE/MP_CE_l_CEopt_)-1)/MP_CE_DeltaW_limb_asc_  ),
-				     MP_CE_v_CElimb_asc_ ) ));
-	return 0;
-
-      }
-
+			 double MP_CE_F_eccentric);
+      
+      double get_isometric_force(double l_CE);
       double get_a_relative(double l_CE,
-			    double F_isom)
-      {
-	return ( 1.0*(l_CE<MP_CE_l_CEopt_) +
-		 F_isom*(l_CE>=MP_CE_l_CEopt_) )*MP_CE_A_rel0_*1/4*(1+3*a);
-      }
-
-      double get_b_relative()
-      {
-	return MP_CE_B_rel0*1*1/7*(3+4*a);
-      }
-
-	 
+			    double F_isom,
+			    double a);
+      double get_b_relative(double a);
       
     private:
+      
+      friend double init_muscle_force_equilibrium(double,
+						  const ParallelElasticElement&,
+						  const ContractileElement&,
+						  const SerialElasticElement&,
+						  double,
+						  double);
+      friend class ParallelElasticElement;
+      friend class SerialDampingElement;
+      friend class Muscle;
+      
       /*! F_max in [N] for Extensor (Kistemaker et al., 2006) */
       double MP_CE_F_max_;
       /*! optimal length of CE in [m] for Extensor (Kistemaker et al., 2006) */
