@@ -6,12 +6,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 find_package(catkin REQUIRED COMPONENTS
   mpi_cmake_modules
+  json_helper
 )
 
 catkin_package(
  LIBRARIES pam_models
  INCLUDE_DIRS include
- CATKIN_DEPENDS mpi_cmake_modules
+ CATKIN_DEPENDS mpi_cmake_modules json_helper
 )
 
 DEFINE_OS()
@@ -24,7 +25,8 @@ add_library(pam_models
   src/hill/serial_elastic_element.cpp
   src/hill/serial_damping_element.cpp
   src/hill/contractile_element.cpp
-  src/hill/muscle.cpp)
+  src/hill/muscle.cpp
+  src/hill/factory.cpp)
 target_link_libraries(pam_models ${catkin_LIBRARIES})
 
 #catkin_add_gtest(pam_interface_unit_tests

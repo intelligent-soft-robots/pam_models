@@ -9,6 +9,7 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <depend>mpi_cmake_modules</depend>
+  <depend>json_helper</depend>
   
   <export>
   </export>

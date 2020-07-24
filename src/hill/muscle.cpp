@@ -77,8 +77,7 @@ namespace pam_models
 		   SerialElasticElement serial_elastic,
 		   double a_init,
 		   double l_MTC_change_init,
-		   double length,
-		   double f_max)
+		   double length)
       : contractile_(contractile),
 	parallel_elastic_(parallel_elastic),
 	serial_damping_(serial_damping),

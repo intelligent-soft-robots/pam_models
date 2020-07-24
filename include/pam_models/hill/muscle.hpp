@@ -33,8 +33,7 @@ namespace pam_models
 	     SerialElasticElement serial_elastic,
 	     double a_init,
 	     double l_MTC_change_init,
-	     double length,
-	     double f_max);
+	     double length);
       std::tuple<double,double> get(double l_MTC,
 				    double dot_l_MTC,
 				    double a,
