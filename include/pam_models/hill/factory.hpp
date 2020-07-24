@@ -13,7 +13,8 @@ namespace pam_models
   {
 
     void from_json(std::string file_path);
-
+    void from_default_json();
+    
   }
 
 }

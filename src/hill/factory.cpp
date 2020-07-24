@@ -21,6 +21,14 @@ namespace pam_models
 	  throw error;
 	}
     }
+
+
+    void from_default_json()
+    {
+      std::string path(JSON_DEFAULT_CONFIG_FILE);
+      std::cout << "\n\n\n"<<path<<"\n\n\n";
+      return from_json(path);
+    }
     
   }
 
