@@ -12,9 +12,11 @@ namespace pam_models
   namespace hill
   {
 
-    void from_json(std::string file_path);
-    void from_default_json();
-    
+    Muscle from_json(std::string file_path,
+		   double a_init,
+		   double l_MTC_change_init);
+    Muscle from_default_json(double a_init,
+			     double l_MTC_change_init);
   }
 
 }

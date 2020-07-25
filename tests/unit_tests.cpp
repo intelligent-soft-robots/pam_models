@@ -17,6 +17,8 @@ class PamModelsHillTests : public ::testing::Test
 
 TEST_F(PamModelsHillTests,default_config_factory)
 {
-  pam_models::hill::from_default_json();
+  double a = 0.5;
+  double l_MTC = 0.05;
+  pam_models::hill::from_default_json(a,l_MTC);
 }
 
