@@ -11,7 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 catkin_package(
  LIBRARIES pam_models
- INCLUDE_DIRS include
+ INCLUDE_DIRS include internal
  CATKIN_DEPENDS mpi_cmake_modules json_helper
 )
 
