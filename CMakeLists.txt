@@ -45,6 +45,7 @@ target_link_libraries(pam_models ${catkin_LIBRARIES})
 target_compile_definitions(pam_models PRIVATE
   JSON_DEFAULT_CONFIG_FILE="${JSON_DEFAULT_CONFIG_FILE}")
 
+catkin_python_setup()
 
 catkin_add_gtest(pam_models_unit_tests
   tests/main.cpp
