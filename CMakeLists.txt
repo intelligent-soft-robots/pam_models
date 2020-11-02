@@ -1,38 +1,46 @@
-cmake_minimum_required(VERSION 2.8.7)
+cmake_minimum_required(VERSION 3.10.2)
 
 project(pam_models)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED on)
 
-find_package(catkin REQUIRED COMPONENTS
-  mpi_cmake_modules
-  json_helper
-)
 
-catkin_package(
- LIBRARIES pam_models
- INCLUDE_DIRS include internal
- CATKIN_DEPENDS mpi_cmake_modules json_helper
-)
+################
+# Dependencies #
+################
 
-DEFINE_OS()
+find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_python REQUIRED)
+find_package(mpi_cmake_modules REQUIRED)
+find_package(json_helper REQUIRED)
+ament_export_dependencies(json_helper)
 
-include_directories(include internal ${catkin_INCLUDE_DIRS})
+# prepare to export all needed targets
+set(all_targets)
+set(all_target_exports)
+
+
+#######################
+# Configuration files #
+#######################
 
 # absolute path to default json configuration file
-get_filename_component(JSON_CONFIG_DIR config ABSOLUTE)
-set(JSON_DEFAULT_CONFIG_FILE "${JSON_CONFIG_DIR}/hill.json")
-set(JSON_TEST_CONFIG_FILE "${JSON_CONFIG_DIR}/hill_test.json")
-set(JSON_DEPRECATED_CONFIG_FILE "${JSON_CONFIG_DIR}/deprecated/muscle_params_orig.json")
-
-# to be sure that linkage remains after install
-set(CMAKE_SKIP_BUILD_RPATH  FALSE)
-set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
+get_filename_component(PAM_MODELS_CONFIG_DIR config ABSOLUTE)
+install(FILES
+  ${PAM_MODELS_CONFIG_DIR}/hill.json
+  DESTINATION /opt/mpi-is)
+install(FILES
+  ${PAM_MODELS_CONFIG_DIR}/hill.json
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/opt/mpi-is)
+set(JSON_DEFAULT_CONFIG_FILE "${PAM_MODELS_CONFIG_DIR}/hill.json")
 
 
-add_library(pam_models
+###########
+# Library #
+###########
+
+add_library( ${PROJECT_NAME} SHARED
   src/hill/brents.cpp
   src/hill/internal/parallel_elastic_element.cpp
   src/hill/internal/serial_elastic_element.cpp
@@ -41,21 +49,66 @@ add_library(pam_models
   src/hill/muscle.cpp
   src/hill/factory.cpp
   src/hill/internal/deprecated/deprecated_muscle.cpp)
-target_link_libraries(pam_models ${catkin_LIBRARIES})
-target_compile_definitions(pam_models PRIVATE
+target_include_directories(
+  ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_compile_definitions(${PROJECT_NAME} PRIVATE
   JSON_DEFAULT_CONFIG_FILE="${JSON_DEFAULT_CONFIG_FILE}")
-
-catkin_python_setup()
-
-catkin_add_gtest(pam_models_unit_tests
-  tests/main.cpp
-  tests/unit_tests.cpp)
-target_link_libraries(pam_models_unit_tests pam_models ${catkin_libraries})
-target_compile_definitions(pam_models_unit_tests PRIVATE
-  JSON_TEST_CONFIG_FILE="${JSON_TEST_CONFIG_FILE}"
-  JSON_DEFAULT_CONFIG_FILE="${JSON_DEFAULT_CONFIG_FILE}"
-  JSON_DEPRECATED_CONFIG_FILE="${JSON_DEPRECATED_CONFIG_FILE}" )
+ament_target_dependencies(${PROJECT_NAME} json_helper)
+target_link_libraries(${PROJECT_NAME} json_helper::json_helper)
+ament_export_interfaces(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+list(APPEND all_targets ${PROJECT_NAME})
+list(APPEND all_target_exports export_${PROJECT_NAME})
 
 
+######################
+# Python Native code #
+######################
 
-#build_sphinx_documentation()
+ament_python_install_package(${PROJECT_NAME} PACKAGE_DIR python/${PROJECT_NAME})
+
+
+######################
+# Install and export #
+######################
+
+install(DIRECTORY include/ DESTINATION include)
+install(
+  TARGETS ${all_targets}
+  EXPORT ${all_target_exports}
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
+  INCLUDES
+  DESTINATION include)
+ament_package()
+
+
+##############
+# Unit tests #
+##############
+
+if(BUILD_TESTING)
+
+  # unit tests have extra config files
+  install(FILES
+    ${PAM_MODELS_CONFIG_DIR}/hill_test.json
+    ${PAM_MODELS_CONFIG_DIR}/deprecated/muscle_params_orig.json
+    DESTINATION /opt/mpi-is)
+  install(FILES
+    ${PAM_MODELS_CONFIG_DIR}/hill_test.json
+    ${PAM_MODELS_CONFIG_DIR}/deprecated/muscle_params_orig.json
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/opt/mpi/is)
+  set(JSON_TEST_CONFIG_FILE "${PAM_MODELS_CONFIG_DIR}/hill_test.json")
+  set(JSON_DEPRECATED_CONFIG_FILE "${PAM_MODELS_CONFIG_DIR}/deprecated/muscle_params_orig.json")
+  
+  find_package(ament_cmake_gtest REQUIRED)
+  ament_add_gtest(test_${PROJECT_NAME}_cpp tests/main.cpp tests/unit_tests.cpp)
+  target_compile_definitions(test_${PROJECT_NAME}_cpp PRIVATE
+    JSON_TEST_CONFIG_FILE="${JSON_TEST_CONFIG_FILE}"
+    JSON_DEFAULT_CONFIG_FILE="${JSON_DEFAULT_CONFIG_FILE}"
+    JSON_DEPRECATED_CONFIG_FILE="${JSON_DEPRECATED_CONFIG_FILE}" )
+  target_link_libraries(test_${PROJECT_NAME}_cpp ${PROJECT_NAME})
+endif()
+
+
