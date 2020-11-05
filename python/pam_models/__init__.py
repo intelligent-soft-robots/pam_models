@@ -1,7 +1,7 @@
 import os
 
 # config files are expected to be in /opt/mpi-is/
-_config_folder = "/opt/mpi-is"
+_config_folder = "/opt/mpi-is/pam_models/"
 
 # return abs path to src/pam_models/config
 def get_config_folder():

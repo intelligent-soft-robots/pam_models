@@ -29,11 +29,11 @@ set(all_target_exports)
 get_filename_component(PAM_MODELS_CONFIG_DIR config ABSOLUTE)
 install(FILES
   ${PAM_MODELS_CONFIG_DIR}/hill.json
-  DESTINATION /opt/mpi-is)
+  DESTINATION /opt/mpi-is/pam_models)
 install(FILES
   ${PAM_MODELS_CONFIG_DIR}/hill.json
-  DESTINATION ${CMAKE_INSTALL_PREFIX}/opt/mpi-is)
-set(JSON_DEFAULT_CONFIG_FILE "${PAM_MODELS_CONFIG_DIR}/hill.json")
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/opt/mpi-is/pam_models)
+set(JSON_DEFAULT_CONFIG_FILE "/opt/mpi-is/pam_models/hill.json")
 
 
 ###########
@@ -94,11 +94,11 @@ if(BUILD_TESTING)
   install(FILES
     ${PAM_MODELS_CONFIG_DIR}/hill_test.json
     ${PAM_MODELS_CONFIG_DIR}/deprecated/muscle_params_orig.json
-    DESTINATION /opt/mpi-is)
+    DESTINATION /opt/mpi-is/pam_models)
   install(FILES
     ${PAM_MODELS_CONFIG_DIR}/hill_test.json
     ${PAM_MODELS_CONFIG_DIR}/deprecated/muscle_params_orig.json
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/opt/mpi/is)
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/opt/mpi-is/pam_models)
   set(JSON_TEST_CONFIG_FILE "${PAM_MODELS_CONFIG_DIR}/hill_test.json")
   set(JSON_DEPRECATED_CONFIG_FILE "${PAM_MODELS_CONFIG_DIR}/deprecated/muscle_params_orig.json")
   
