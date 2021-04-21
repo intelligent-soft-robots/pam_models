@@ -97,10 +97,12 @@ ament_package()
 if(BUILD_TESTING)
 
   # unit tests have extra config files
-  install(FILES
-    ${PAM_MODELS_CONFIG_DIR}/hill_test.json
-    ${PAM_MODELS_CONFIG_DIR}/deprecated/muscle_params_orig.json
-    DESTINATION /opt/mpi-is/pam_models)
+  if (EXISTS "/opt/mpi-is")
+    install(FILES
+      ${PAM_MODELS_CONFIG_DIR}/hill_test.json
+      ${PAM_MODELS_CONFIG_DIR}/deprecated/muscle_params_orig.json
+      DESTINATION /opt/mpi-is/pam_models)
+  endif()
   install(FILES
     ${PAM_MODELS_CONFIG_DIR}/hill_test.json
     ${PAM_MODELS_CONFIG_DIR}/deprecated/muscle_params_orig.json
