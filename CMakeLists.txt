@@ -27,13 +27,19 @@ set(all_target_exports)
 
 # absolute path to default json configuration file
 get_filename_component(PAM_MODELS_CONFIG_DIR config ABSOLUTE)
-install(FILES
-  ${PAM_MODELS_CONFIG_DIR}/hill.json
-  DESTINATION /opt/mpi-is/pam_models)
+# installing files in /opt/mpi-is/ if exists
+if (EXISTS "/opt/mpi-is")
+  install(FILES
+    ${PAM_MODELS_CONFIG_DIR}/hill.json
+    DESTINATION /opt/mpi-is/pam_models)
+  set(JSON_DEFAULT_CONFIG_FILE "/opt/mpi-is/pam_models/hill.json")
+else()
+  set(JSON_DEFAULT_CONFIG_FILE "${CMAKE_INSTALL_PREFIX}/opt/mpi-is/pam_models/hill.json")
+endif()
 install(FILES
   ${PAM_MODELS_CONFIG_DIR}/hill.json
   DESTINATION ${CMAKE_INSTALL_PREFIX}/opt/mpi-is/pam_models)
-set(JSON_DEFAULT_CONFIG_FILE "/opt/mpi-is/pam_models/hill.json")
+
 
 
 ###########
