@@ -42,6 +42,9 @@ Copyright notice from the MATLAB model by Haeufle et al.:
 
 **/
 
+// clang-format off
+// TODO: there is some issue here that makes the build break if the order of
+// includes is wrong.
 #include "stdio.h"
 #include "math.h"
 #include <cmath>
@@ -50,6 +53,7 @@ Copyright notice from the MATLAB model by Haeufle et al.:
 #include <iostream>
 #include "json_helper/json_helper.hpp"
 #include "pam_models/hill/deprecated/deprecated_muscle.hpp"
+// clang-format on
 
 namespace pam_models
 {
