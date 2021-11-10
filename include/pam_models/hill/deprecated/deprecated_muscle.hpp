@@ -85,9 +85,9 @@ private:
 
     double MP_l_MTC_init;  // initial length of MTC unit, current length =
                            // intial length + length from mujoco
-    double MP_l_CE_init;  // initial length of CE, current length = intial
-                          // length + length from mujoco
-    double a_init;  // initial control signal for muscle tendon unit
+    double MP_l_CE_init;   // initial length of CE, current length = intial
+                           // length + length from mujoco
+    double a_init;         // initial control signal for muscle tendon unit
 
     bool F_MTU_current_and_dot_l_CE_current_exist = false;
     double F_MTU_current;
