@@ -6,15 +6,15 @@
 namespace pam_models
 {
 
-  namespace hill
-  {
+namespace hill
+{
 
-    double brents(std::function<double (double)> f,
-		  double lower,
-		  double upper,
-		  double tol=0.00000001,
-		  unsigned int max_iter=1000);
+double brents(std::function<double(double)> f,
+              double lower,
+              double upper,
+              double tol = 0.00000001,
+              unsigned int max_iter = 1000);
 
-  }
-  
 }
+
+}  // namespace pam_models
