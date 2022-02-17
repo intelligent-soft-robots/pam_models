@@ -18,8 +18,7 @@ Muscle from_json(std::string file_path, double a_init, double l_MTC_change_init)
     {
         std::stringstream ss;
         ss << "Failed to read JSON file " << file_path << "\n";
-        std::string error = ss.str();
-        throw error;
+        throw std::runtime_error(ss.str());
     }
 
     double f_max = jh.j["contractile"]["f_max"].get<double>();
