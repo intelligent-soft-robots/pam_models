@@ -93,69 +93,70 @@ TEST_F(PamModelsHillTests, check_json_loader)
 
     // Compares generated and loaded parameters from test file
     configuration.load_from_json(file_path);
+    double tolerance = 1e-6;
 
-    ASSERT_NEAR(j["length"], configuration.length, 0.001);
+    ASSERT_NEAR(j["length"], configuration.length, tolerance);
 
     ASSERT_NEAR(j["contractile"]["f_max"],
                 configuration.CE_parameter_storage["f_max"],
-                0.001);
+                tolerance);
     ASSERT_NEAR(j["contractile"]["l_CEopt"],
                 configuration.CE_parameter_storage["l_CEopt"],
-                0.001);
+                tolerance);
     ASSERT_NEAR(j["contractile"]["delta_w_limb_desc"],
                 configuration.CE_parameter_storage["delta_w_limb_desc"],
-                0.001);
+                tolerance);
     ASSERT_NEAR(j["contractile"]["delta_w_limb_asc"],
                 configuration.CE_parameter_storage["delta_w_limb_asc"],
-                0.001);
+                tolerance);
     ASSERT_NEAR(j["contractile"]["limb_desc"],
                 configuration.CE_parameter_storage["limb_desc"],
-                0.001);
+                tolerance);
     ASSERT_NEAR(j["contractile"]["limb_asc"],
                 configuration.CE_parameter_storage["limb_asc"],
-                0.001);
+                tolerance);
     ASSERT_NEAR(j["contractile"]["a_rel0"],
                 configuration.CE_parameter_storage["a_rel0"],
-                0.001);
+                tolerance);
     ASSERT_NEAR(j["contractile"]["b_rel0"],
                 configuration.CE_parameter_storage["b_rel0"],
-                0.001);
+                tolerance);
     ASSERT_NEAR(j["contractile"]["s_eccentric"],
                 configuration.CE_parameter_storage["s_eccentric"],
-                0.001);
+                tolerance);
     ASSERT_NEAR(j["contractile"]["c_eccentric"],
                 configuration.CE_parameter_storage["c_eccentric"],
-                0.001);
+                tolerance);
 
     ASSERT_NEAR(j["parallel_elastic"]["L"],
                 configuration.PEE_parameter_storage["L"],
-                0.001);
+                tolerance);
     ASSERT_NEAR(j["parallel_elastic"]["v"],
                 configuration.PEE_parameter_storage["v"],
-                0.001);
+                tolerance);
     ASSERT_NEAR(j["parallel_elastic"]["F"],
                 configuration.PEE_parameter_storage["F"],
-                0.001);
+                tolerance);
 
     ASSERT_NEAR(j["serial_damping"]["d_se"],
                 configuration.SDE_parameter_storage["d_se"],
-                0.001);
+                tolerance);
     ASSERT_NEAR(j["serial_damping"]["r_se"],
                 configuration.SDE_parameter_storage["r_se"],
-                0.001);
+                tolerance);
 
     ASSERT_NEAR(j["serial_elastic"]["l"],
                 configuration.SEE_parameter_storage["l"],
-                0.001);
+                tolerance);
     ASSERT_NEAR(j["serial_elastic"]["delta_u_nll"],
                 configuration.SEE_parameter_storage["delta_u_nll"],
-                0.001);
+                tolerance);
     ASSERT_NEAR(j["serial_elastic"]["delta_u_l"],
                 configuration.SEE_parameter_storage["delta_u_l"],
-                0.001);
+                tolerance);
     ASSERT_NEAR(j["serial_elastic"]["delta_f"],
                 configuration.SEE_parameter_storage["delta_f"],
-                0.001);
+                tolerance);
 }
 
 /**
