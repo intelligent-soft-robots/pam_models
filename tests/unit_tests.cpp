@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <cstdio>
 #include <cstdlib>
 #include <filesystem>
 #include <set>
@@ -46,23 +47,115 @@ TEST_F(PamModelsHillTests, check_brents_method)
  */
 TEST_F(PamModelsHillTests, check_json_loader)
 {
-    std::string dir_path = std::filesystem::current_path();
-    std::string file_name = "test_file.json";
-    std::string file_path = dir_path + "/" + file_name;
+    char path[] = "/tmp/test_json_XXXXXX";
+    // generates unique and secure file for loading test parameter
+    int unique_file_specifier = mkstemp(path);
 
-    // Generate json file with Planck constant
-    double test_value_write = 6.62607;  // Planck constant
+    if (unique_file_specifier == -1)
+    {
+        throw std::runtime_error("Failed to generate test file");
+    }
+
+    std::string file_path = path;
+
+    // Randomly generate muscle parameters and write into test file
     pam_models::hill::Configuration configuration;
-    configuration.generate_test_json(file_path, test_value_write);
 
-    // Reads generated json file
-    double test_value_read = configuration.load_test_json(file_path);
+    json j;
 
-    // Compares generated and read json value
-    ASSERT_EQ(test_value_read, test_value_write);
+    j["length"] = (double)std::rand() / RAND_MAX;
 
-    // Removes generated json file after unit test
-    std::filesystem::remove(file_path);
+    j["contractile"]["f_max"] = (double)std::rand() / RAND_MAX;
+    j["contractile"]["l_CEopt"] = (double)std::rand() / RAND_MAX;
+    j["contractile"]["delta_w_limb_desc"] = (double)std::rand() / RAND_MAX;
+    j["contractile"]["delta_w_limb_asc"] = (double)std::rand() / RAND_MAX;
+    j["contractile"]["limb_desc"] = (double)std::rand() / RAND_MAX;
+    j["contractile"]["limb_asc"] = (double)std::rand() / RAND_MAX;
+    j["contractile"]["a_rel0"] = (double)std::rand() / RAND_MAX;
+    j["contractile"]["b_rel0"] = (double)std::rand() / RAND_MAX;
+    j["contractile"]["s_eccentric"] = (double)std::rand() / RAND_MAX;
+    j["contractile"]["c_eccentric"] = (double)std::rand() / RAND_MAX;
+
+    j["serial_damping"]["d_se"] = (double)std::rand() / RAND_MAX;
+    j["serial_damping"]["r_se"] = (double)std::rand() / RAND_MAX;
+
+    j["parallel_elastic"]["L"] = (double)std::rand() / RAND_MAX;
+    j["parallel_elastic"]["v"] = (double)std::rand() / RAND_MAX;
+    j["parallel_elastic"]["F"] = (double)std::rand() / RAND_MAX;
+
+    j["serial_elastic"]["l"] = (double)std::rand() / RAND_MAX;
+    j["serial_elastic"]["delta_u_nll"] = (double)std::rand() / RAND_MAX;
+    j["serial_elastic"]["delta_u_l"] = (double)std::rand() / RAND_MAX;
+    j["serial_elastic"]["delta_f"] = (double)std::rand() / RAND_MAX;
+
+    std::ofstream o(file_path);
+    o << std::setw(4) << j << std::endl;
+
+    // Compares generated and loaded parameters from test file
+    configuration.load_from_json(file_path);
+
+    ASSERT_NEAR(j["length"], configuration.length, 0.001);
+
+    ASSERT_NEAR(j["contractile"]["f_max"],
+                configuration.CE_parameter_storage["f_max"],
+                0.001);
+    ASSERT_NEAR(j["contractile"]["l_CEopt"],
+                configuration.CE_parameter_storage["l_CEopt"],
+                0.001);
+    ASSERT_NEAR(j["contractile"]["delta_w_limb_desc"],
+                configuration.CE_parameter_storage["delta_w_limb_desc"],
+                0.001);
+    ASSERT_NEAR(j["contractile"]["delta_w_limb_asc"],
+                configuration.CE_parameter_storage["delta_w_limb_asc"],
+                0.001);
+    ASSERT_NEAR(j["contractile"]["limb_desc"],
+                configuration.CE_parameter_storage["limb_desc"],
+                0.001);
+    ASSERT_NEAR(j["contractile"]["limb_asc"],
+                configuration.CE_parameter_storage["limb_asc"],
+                0.001);
+    ASSERT_NEAR(j["contractile"]["a_rel0"],
+                configuration.CE_parameter_storage["a_rel0"],
+                0.001);
+    ASSERT_NEAR(j["contractile"]["b_rel0"],
+                configuration.CE_parameter_storage["b_rel0"],
+                0.001);
+    ASSERT_NEAR(j["contractile"]["s_eccentric"],
+                configuration.CE_parameter_storage["s_eccentric"],
+                0.001);
+    ASSERT_NEAR(j["contractile"]["c_eccentric"],
+                configuration.CE_parameter_storage["c_eccentric"],
+                0.001);
+
+    ASSERT_NEAR(j["parallel_elastic"]["L"],
+                configuration.PEE_parameter_storage["L"],
+                0.001);
+    ASSERT_NEAR(j["parallel_elastic"]["v"],
+                configuration.PEE_parameter_storage["v"],
+                0.001);
+    ASSERT_NEAR(j["parallel_elastic"]["F"],
+                configuration.PEE_parameter_storage["F"],
+                0.001);
+
+    ASSERT_NEAR(j["serial_damping"]["d_se"],
+                configuration.SDE_parameter_storage["d_se"],
+                0.001);
+    ASSERT_NEAR(j["serial_damping"]["r_se"],
+                configuration.SDE_parameter_storage["r_se"],
+                0.001);
+
+    ASSERT_NEAR(j["serial_elastic"]["l"],
+                configuration.SEE_parameter_storage["l"],
+                0.001);
+    ASSERT_NEAR(j["serial_elastic"]["delta_u_nll"],
+                configuration.SEE_parameter_storage["delta_u_nll"],
+                0.001);
+    ASSERT_NEAR(j["serial_elastic"]["delta_u_l"],
+                configuration.SEE_parameter_storage["delta_u_l"],
+                0.001);
+    ASSERT_NEAR(j["serial_elastic"]["delta_f"],
+                configuration.SEE_parameter_storage["delta_f"],
+                0.001);
 }
 
 /**

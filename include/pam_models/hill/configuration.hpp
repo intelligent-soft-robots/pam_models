@@ -54,24 +54,6 @@ public:
      * Loads configuration from default json file into configuration manager.
      */
     void load_from_default_json();
-
-    /**
-     * Generates json file in given file path with given test value.
-     *
-     * @param file_path Absolute file path for generation of json file
-     * @param test_value Test value which is loaded into generated json file
-     * @remark Main purpose of this function is unit testing
-     */
-    void generate_test_json(std::string file_path, double test_value);
-
-    /**
-     * Loads test value from json file specified by given file path.
-     *
-     * @param file_path Absolute file path of json file to be loaded
-     * @return Test value stored in json file
-     * @remark Main purpose of this function is unit testing
-     */
-    double load_test_json(std::string file_path);
 };
 
 }  // namespace hill

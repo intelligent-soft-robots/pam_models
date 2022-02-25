@@ -70,36 +70,6 @@ void Configuration::load_from_default_json()
     load_from_json(path);
 }
 
-void Configuration::generate_test_json(std::string file_path, double test_value)
-{
-    json j;
-
-    j["planck_constant"] = test_value;
-
-    std::ofstream o(file_path);
-    o << std::setw(4) << j << std::endl;
-}
-
-double Configuration::load_test_json(std::string file_path)
-{
-    json_helper::Jsonhelper jh;
-
-    try
-    {
-        jh.parse(file_path);
-    }
-    catch (...)
-    {
-        std::stringstream ss;
-        ss << "Failed to read JSON file " << file_path << "\n";
-        throw std::runtime_error(ss.str());
-    }
-
-    double test_value = jh.j["planck_constant"].get<double>();
-
-    return test_value;
-}
-
 }  // namespace hill
 
 }  // namespace pam_models
