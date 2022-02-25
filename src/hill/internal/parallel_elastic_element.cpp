@@ -2,10 +2,8 @@
 
 namespace pam_models
 {
-
 namespace hill
 {
-
 ParallelElasticElement::ParallelElasticElement(
     const ContractileElement& contractile_element,
     double MP_PEE_L_PEE0,
@@ -31,6 +29,16 @@ double ParallelElasticElement::get_force(double l_CE)
         return MP_PEE_K_PEE_ * pow(l_CE - MP_PEE_l_PEE0_, MP_PEE_v_PEE_);
     }
     return 0;
+}
+
+double ParallelElasticElement::get_l_parameter() const
+{
+    return MP_PEE_l_PEE0_;
+}
+
+double ParallelElasticElement::get_K_parameter() const
+{
+    return MP_PEE_K_PEE_;
 }
 
 }  // namespace hill

@@ -2,11 +2,8 @@
 
 namespace pam_models
 {
-
 namespace hill
 {
-
-// source: RosettaCode  https://rosettacode.org/wiki/Roots_of_a_function
 double brents(std::function<double(double)> f,
               double lower,
               double upper,

@@ -2,10 +2,8 @@
 
 namespace pam_models
 {
-
 namespace hill
 {
-
 ContractileElement::ContractileElement(double f_max,
                                        double MP_CE_l_CEopt,
                                        double MP_CE_DeltaW_limb_des,
@@ -33,13 +31,19 @@ ContractileElement::ContractileElement(double f_max,
 double ContractileElement::get_isometric_force(double l_CE)
 {
     if (MP_CE_l_CEopt_ <= l_CE)
+    {
         return (exp(
             -pow(fabs(((l_CE / MP_CE_l_CEopt_) - 1) / MP_CE_DeltaW_limb_des_),
                  MP_CE_v_CElimb_des_)));
-    if (MP_CE_l_CEopt_ > l_CE && MP_CE_l_CEopt_ > l_CE)
+    }
+
+    if (MP_CE_l_CEopt_ > l_CE)
+    {
         return (exp(
             -pow(fabs(((l_CE / MP_CE_l_CEopt_) - 1) / MP_CE_DeltaW_limb_asc_),
                  MP_CE_v_CElimb_asc_)));
+    }
+
     return 0;
 }
 
