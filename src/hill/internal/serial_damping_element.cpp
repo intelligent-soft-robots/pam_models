@@ -2,10 +2,8 @@
 
 namespace pam_models
 {
-
 namespace hill
 {
-
 SerialDampingElement::SerialDampingElement(
     const ContractileElement& contractile_element,
     double MP_SDE_D_SE,
@@ -32,5 +30,11 @@ double SerialDampingElement::get_force(double F_CE,
     return MP_SDE_d_SEmax_ * (t1 + MP_SDE_R_SE_) * (t2);
 }
 
+double SerialDampingElement::get_maximum_damping_coefficent() const
+{
+    return MP_SDE_d_SEmax_;
+}
+
 }  // namespace hill
+
 }  // namespace pam_models

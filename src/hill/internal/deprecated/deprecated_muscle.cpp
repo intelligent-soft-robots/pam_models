@@ -43,7 +43,7 @@ Copyright notice from the MATLAB model by Haeufle et al.:
 **/
 
 // clang-format off
-// TODO: there is some issue here that makes the build break if the order of
+// there is some issue here that makes the build break if the order of
 // includes is wrong.
 #include "stdio.h"
 #include "math.h"
@@ -57,13 +57,10 @@ Copyright notice from the MATLAB model by Haeufle et al.:
 
 namespace pam_models
 {
-
 namespace hill
 {
-
 namespace deprecated
 {
-
 HillMuscle::HillMuscle(std::string parameterfile,
                        double a_init,
                        double l_MTC_change_init)

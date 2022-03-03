@@ -44,13 +44,10 @@ Copyright notice from the MATLAB model by Haeufle et al.:
 
 namespace pam_models
 {
-
 namespace hill
 {
-
 namespace deprecated
 {
-
 #ifndef HILLMUSCLE_H_
 #define HILLMUSCLE_H_
 
@@ -124,7 +121,7 @@ private:
                                // for large eccentric velocities (van Soest &
                                // Bobbert, 1993)
 
-    // paralel elastic element (PEE)
+    // parallel elastic element (PEE)
     //===============================
 
     double MP_PEE_L_PEE0;  // rest length of PEE normalized to optimal lenght of
@@ -163,8 +160,11 @@ private:
     double MP_SEE_KSEEnl;
     double MP_SEE_KSEEl;
 };
-}
-}
-}
+
+}  // deprecated
+
+}  // hill
+
+}  // pam_models
 
 #endif

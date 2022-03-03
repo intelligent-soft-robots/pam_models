@@ -2,11 +2,8 @@
 
 namespace pam_models
 {
-
 namespace hill
 {
-
-// line 218
 double init_muscle_force_equilibrium(double l_CE,
                                      const ParallelElasticElement& PEE,
                                      const ContractileElement& CE,
@@ -93,7 +90,6 @@ Muscle::Muscle(ContractileElement contractile,
     MP_l_CE_init_ = brents(f, 0, MP_l_MTC_init_);
 }
 
-// line 142, returns F_MTU_current and dot_l_CE_current
 std::tuple<double, double> Muscle::get(double l_MTC,
                                        double dot_l_MTC,
                                        double a,
@@ -170,21 +166,18 @@ std::tuple<double, double> Muscle::get(double l_MTC,
     double dot_l_CE_current = dot_l_CE;
 
     double F_CE;
-    {
-        F_CE = contractile_.MP_CE_F_max_;
-        F_CE *= ((a * F_isom + A_rel) /
-                 (1 - (dot_l_CE / (B_rel * contractile_.MP_CE_l_CEopt_)))) -
-                A_rel;
-    }
+
+    F_CE = contractile_.MP_CE_F_max_;
+    F_CE *= ((a * F_isom + A_rel) /
+             (1 - (dot_l_CE / (B_rel * contractile_.MP_CE_l_CEopt_)))) -
+            A_rel;
 
     double F_SDE;
-    {
-        F_SDE = serial_damping_.MP_SDE_d_SEmax_ *
-                ((1 - serial_damping_.MP_SDE_R_SE_) *
-                     ((F_CE + F_PEE) / contractile_.MP_CE_F_max_) +
-                 serial_damping_.MP_SDE_R_SE_) *
-                (dot_l_MTC - dot_l_CE);
-    }
+    F_SDE = serial_damping_.MP_SDE_d_SEmax_ *
+            ((1 - serial_damping_.MP_SDE_R_SE_) *
+                 ((F_CE + F_PEE) / contractile_.MP_CE_F_max_) +
+             serial_damping_.MP_SDE_R_SE_) *
+            (dot_l_MTC - dot_l_CE);
 
     double F_MTU_current = F_SEE + F_SDE;
 

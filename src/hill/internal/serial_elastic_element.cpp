@@ -2,10 +2,8 @@
 
 namespace pam_models
 {
-
 namespace hill
 {
-
 SerialElasticElement::SerialElasticElement(double l_0,
                                            double deltaU_nll,
                                            double deltaU_l,
@@ -21,35 +19,71 @@ SerialElasticElement::SerialElasticElement(double l_0,
 {
 }
 
-double SerialElasticElement::init_serial_elastic_element_force(double l_mtc,
-                                                               double l_ce)
+double SerialElasticElement::init_serial_elastic_element_force(double l_MTC,
+                                                               double l_CE)
 {
-    double f;
-    double l = fabs(l_mtc - l_ce);
+    double F_SEE_init;
+    double l_SEE = fabs(l_MTC - l_CE);
+
     // non-linear part
-    if ((l > l_0_) && (l < l_nll_))
+    if ((l_SEE > l_0_) && (l_SEE < l_nll_))
     {
-        f = k_nl_ * pow(l - l_0_, v_);
+        F_SEE_init = k_nl_ * pow(l_SEE - l_0_, v_);
     }
     // linear part
-    else if (l >= l_nll_)
+    else if (l_SEE >= l_nll_)
     {
-        f = deltaF_0_ + k_l_ * (l - l_nll_);
+        F_SEE_init = deltaF_0_ + k_l_ * (l_SEE - l_nll_);
     }
     // slack length
     else
     {
-        f = 0;
+        F_SEE_init = 0.0;
     }
-    return f;
+    return F_SEE_init;
 }
 
 double SerialElasticElement::get_force(double l_MTC, double l_CE)
 {
-    double l_se = l_MTC - l_CE;
-    double f = (l_se >= l_nll_) * (deltaF_0_ + k_l_ * (l_se - l_nll_));
-    if (l_se > l_0_ && l_se < l_nll_) f += k_nl_ * (pow(l_se - l_0_, v_));
-    return f;
+    double l_SEE = fabs(l_MTC - l_CE);
+    double F_SEE = 0.0;
+
+    if (l_SEE >= l_nll_)
+    {
+        F_SEE = deltaF_0_ + k_l_ * (l_SEE - l_nll_);
+    }
+
+    if ((l_SEE > l_0_) && (l_SEE < l_nll_))
+    {
+        F_SEE += k_nl_ * pow(l_SEE - l_0_, v_);
+    }
+
+    if (l_SEE < l_0_)
+    {
+        F_SEE = 0.0;
+    }
+
+    return F_SEE;
+}
+
+double SerialElasticElement::get_l_nll() const
+{
+    return l_nll_;
+}
+
+double SerialElasticElement::get_v() const
+{
+    return v_;
+}
+
+double SerialElasticElement::get_k_l() const
+{
+    return k_l_;
+}
+
+double SerialElasticElement::get_k_nl() const
+{
+    return k_nl_;
 }
 
 }  // namespace hill

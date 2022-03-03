@@ -47,13 +47,14 @@ install(FILES
 ###########
 
 add_library( ${PROJECT_NAME} SHARED
-  src/hill/brents.cpp
   src/hill/internal/parallel_elastic_element.cpp
   src/hill/internal/serial_elastic_element.cpp
   src/hill/internal/serial_damping_element.cpp
   src/hill/internal/contractile_element.cpp
-  src/hill/muscle.cpp
+  src/hill/brents.cpp
+  src/hill/configuration.cpp
   src/hill/factory.cpp
+  src/hill/muscle.cpp
   src/hill/internal/deprecated/deprecated_muscle.cpp)
 target_include_directories(
   ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -115,8 +116,13 @@ if(BUILD_TESTING)
   target_compile_definitions(test_${PROJECT_NAME}_cpp PRIVATE
     JSON_TEST_CONFIG_FILE="${JSON_TEST_CONFIG_FILE}"
     JSON_DEFAULT_CONFIG_FILE="${JSON_DEFAULT_CONFIG_FILE}"
-    JSON_DEPRECATED_CONFIG_FILE="${JSON_DEPRECATED_CONFIG_FILE}" )
+    JSON_DEPRECATED_CONFIG_FILE="${JSON_DEPRECATED_CONFIG_FILE}")
   target_link_libraries(test_${PROJECT_NAME}_cpp ${PROJECT_NAME})
 endif()
 
+#################
+# Documentation #
+#################
 
+# find_package(mpi_cmake_modules)
+add_documentation()
