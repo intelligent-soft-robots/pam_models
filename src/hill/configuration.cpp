@@ -64,10 +64,17 @@ void Configuration::load_from_json(std::string file_path)
     length = jh.j["length"].get<double>();
 }
 
+std::filesystem::path Configuration::get_default_json_file()
+{
+    std::filesystem::path prefix = pam_configuration::get_path();
+    std::filesystem::path abs_path =
+        prefix / std::string(HILL_JSON_RELATIVE_PATH);
+    return abs_path;
+}
+
 void Configuration::load_from_default_json()
 {
-    std::string path(JSON_DEFAULT_CONFIG_FILE);
-    load_from_json(path);
+    load_from_json(get_default_json_file().string());
 }
 
 }  // namespace hill

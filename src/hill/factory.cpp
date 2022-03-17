@@ -84,7 +84,7 @@ Muscle from_json(std::string file_path, double a_init, double l_MTC_change_init)
 
 Muscle from_default_json(double a_init, double l_MTC_change_init)
 {
-    std::string path(JSON_DEFAULT_CONFIG_FILE);
+    std::string path = Configuration::get_default_json_file().string();
     return from_json(path, a_init, l_MTC_change_init);
 }
 

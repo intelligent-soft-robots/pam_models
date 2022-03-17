@@ -8,6 +8,27 @@
 #include "gtest/gtest.h"
 #include "pam_models/hill/deprecated/deprecated_muscle.hpp"
 #include "pam_models/hill/factory.hpp"
+
+#define PAM_MODELS_PACKAGE "pam_models"
+#define PAM_MODELS_DEPRECATED "deprecated"
+#define PAM_MODELS_ORIG_JSON "muscle_params_orig.json"
+#define HILL_TEST_JSON "hill_test.json"
+
+static std::string get_hill_test_json()
+{
+    std::filesystem::path path =
+        pam_configuration::get_path() / PAM_MODELS_PACKAGE / HILL_TEST_JSON;
+    return path.string();
+}
+
+static std::string get_deprecated_hill_json()
+{
+    std::filesystem::path path = pam_configuration::get_path() /
+                                 PAM_MODELS_PACKAGE / PAM_MODELS_DEPRECATED /
+                                 PAM_MODELS_ORIG_JSON;
+    return path.string();
+}
+
 class PamModelsHillTests : public ::testing::Test
 {
     void SetUp()
@@ -163,7 +184,7 @@ TEST_F(PamModelsHillTests, check_json_loader)
  * Comparing resulting muscle forces of this package to depricated
  * implementation of Hill-type muscle model.
  */
-TEST_F(PamModelsHillTests, compare_to_depricated_muscle_model)
+TEST_F(PamModelsHillTests, compare_to_deprecated_muscle_model)
 {
     double ref_force;
     double ref_dot_l_CE;
@@ -174,7 +195,7 @@ TEST_F(PamModelsHillTests, compare_to_depricated_muscle_model)
         double l_MTC_init = 0.0;
 
         pam_models::hill::deprecated::HillMuscle muscle_test(
-            JSON_DEPRECATED_CONFIG_FILE, a_init, l_MTC_init);
+            get_deprecated_hill_json(), a_init, l_MTC_init);
 
         double l_MTC = 0.05;
         double dot_l_MTC = 0.001;
@@ -192,7 +213,7 @@ TEST_F(PamModelsHillTests, compare_to_depricated_muscle_model)
         double l_MTC_init = 0.0;
 
         pam_models::hill::Muscle muscle = pam_models::hill::from_json(
-            JSON_TEST_CONFIG_FILE, a_init, l_MTC_init);
+            get_hill_test_json(), a_init, l_MTC_init);
 
         double l_MTC = 0.05;
         double dot_l_MTC = 0.001;
@@ -221,7 +242,8 @@ TEST_F(PamModelsHillTests, CE_compare_isometric_force)
     double l_CE = 0.25;
 
     // Model parameters
-    std::string file_path = JSON_DEFAULT_CONFIG_FILE;
+    std::string file_path =
+        pam_models::hill::Configuration::get_default_json_file().string();
     pam_models::hill::Configuration config;
     config.load_from_json(file_path);
 
@@ -272,7 +294,8 @@ TEST_F(PamModelsHillTests, CE_compare_relative_curves)
     double a = 0.05;
 
     // Model parameters
-    std::string file_path = JSON_DEFAULT_CONFIG_FILE;
+    std::string file_path =
+        pam_models::hill::Configuration::get_default_json_file().string();
     pam_models::hill::Configuration config;
     config.load_from_json(file_path);
 
@@ -331,7 +354,8 @@ TEST_F(PamModelsHillTests, PEE_compare_to_reference)
     double l_CE = 0.25;
 
     // Model parameters
-    std::string file_path = JSON_DEFAULT_CONFIG_FILE;
+    std::string file_path =
+        pam_models::hill::Configuration::get_default_json_file().string();
     pam_models::hill::Configuration config;
     config.load_from_json(file_path);
 
@@ -394,7 +418,8 @@ TEST_F(PamModelsHillTests, SDE_compare_to_reference)
     double dot_l_CE = 0.5;
 
     // Model parameters
-    std::string file_path = JSON_DEFAULT_CONFIG_FILE;
+    std::string file_path =
+        pam_models::hill::Configuration::get_default_json_file().string();
     pam_models::hill::Configuration config;
     config.load_from_json(file_path);
 
@@ -441,7 +466,8 @@ TEST_F(PamModelsHillTests, SEE_compare_to_reference)
     double l_CE = 0.1;
 
     // Model parameters
-    std::string file_path = JSON_DEFAULT_CONFIG_FILE;
+    std::string file_path =
+        pam_models::hill::Configuration::get_default_json_file().string();
     pam_models::hill::Configuration config;
     config.load_from_json(file_path);
 

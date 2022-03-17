@@ -14,32 +14,12 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 find_package(mpi_cmake_modules REQUIRED)
 find_package(json_helper REQUIRED)
+find_package(pam_configuration REQUIRED)
 ament_export_dependencies(json_helper)
 
 # prepare to export all needed targets
 set(all_targets)
 set(all_target_exports)
-
-
-#######################
-# Configuration files #
-#######################
-
-# absolute path to default json configuration file
-get_filename_component(PAM_MODELS_CONFIG_DIR config ABSOLUTE)
-# installing files in /opt/mpi-is/ if exists
-if (EXISTS "/opt/mpi-is")
-  install(FILES
-    ${PAM_MODELS_CONFIG_DIR}/hill.json
-    DESTINATION /opt/mpi-is/pam_models)
-  set(JSON_DEFAULT_CONFIG_FILE "/opt/mpi-is/pam_models/hill.json")
-else()
-  set(JSON_DEFAULT_CONFIG_FILE "${CMAKE_INSTALL_PREFIX}/opt/mpi-is/pam_models/hill.json")
-endif()
-install(FILES
-  ${PAM_MODELS_CONFIG_DIR}/hill.json
-  DESTINATION ${CMAKE_INSTALL_PREFIX}/opt/mpi-is/pam_models)
-
 
 
 ###########
@@ -59,10 +39,9 @@ add_library( ${PROJECT_NAME} SHARED
 target_include_directories(
   ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_compile_definitions(${PROJECT_NAME} PRIVATE
-  JSON_DEFAULT_CONFIG_FILE="${JSON_DEFAULT_CONFIG_FILE}")
 ament_target_dependencies(${PROJECT_NAME} json_helper)
 target_link_libraries(${PROJECT_NAME} json_helper::json_helper)
+target_link_libraries(${PROJECT_NAME} pam_configuration::pam_configuration)
 ament_export_interfaces(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 list(APPEND all_targets ${PROJECT_NAME})
 list(APPEND all_target_exports export_${PROJECT_NAME})
@@ -79,7 +58,6 @@ ament_python_install_package(${PROJECT_NAME} PACKAGE_DIR python/${PROJECT_NAME})
 # Install and export #
 ######################
 
-install(DIRECTORY include/ DESTINATION include)
 install(
   TARGETS ${all_targets}
   EXPORT ${all_target_exports}
@@ -96,27 +74,8 @@ ament_package()
 ##############
 
 if(BUILD_TESTING)
-
-  # unit tests have extra config files
-  if (EXISTS "/opt/mpi-is")
-    install(FILES
-      ${PAM_MODELS_CONFIG_DIR}/hill_test.json
-      ${PAM_MODELS_CONFIG_DIR}/deprecated/muscle_params_orig.json
-      DESTINATION /opt/mpi-is/pam_models)
-  endif()
-  install(FILES
-    ${PAM_MODELS_CONFIG_DIR}/hill_test.json
-    ${PAM_MODELS_CONFIG_DIR}/deprecated/muscle_params_orig.json
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/opt/mpi-is/pam_models)
-  set(JSON_TEST_CONFIG_FILE "${PAM_MODELS_CONFIG_DIR}/hill_test.json")
-  set(JSON_DEPRECATED_CONFIG_FILE "${PAM_MODELS_CONFIG_DIR}/deprecated/muscle_params_orig.json")
-  
   find_package(ament_cmake_gtest REQUIRED)
   ament_add_gtest(test_${PROJECT_NAME}_cpp tests/main.cpp tests/unit_tests.cpp)
-  target_compile_definitions(test_${PROJECT_NAME}_cpp PRIVATE
-    JSON_TEST_CONFIG_FILE="${JSON_TEST_CONFIG_FILE}"
-    JSON_DEFAULT_CONFIG_FILE="${JSON_DEFAULT_CONFIG_FILE}"
-    JSON_DEPRECATED_CONFIG_FILE="${JSON_DEPRECATED_CONFIG_FILE}")
   target_link_libraries(test_${PROJECT_NAME}_cpp ${PROJECT_NAME})
 endif()
 
@@ -124,5 +83,4 @@ endif()
 # Documentation #
 #################
 
-# find_package(mpi_cmake_modules)
 add_documentation()
