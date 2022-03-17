@@ -57,7 +57,7 @@ ament_python_install_package(${PROJECT_NAME} PACKAGE_DIR python/${PROJECT_NAME})
 ######################
 # Install and export #
 ######################
-
+install(DIRECTORY include/ DESTINATION include)
 install(
   TARGETS ${all_targets}
   EXPORT ${all_target_exports}

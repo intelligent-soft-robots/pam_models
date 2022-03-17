@@ -12,10 +12,10 @@ def get_config_folder() -> pathlib.Path:
 
 def get_config_path(config: str) -> pathlib.Path:
     config_folder = get_config_folder()
-    config_file = config_folder / str(str(config) + ".json")
+    config_file = config_folder / (str(config) + ".json")
     if not config_file.is_file():
         raise FileNotFoundError(
-            str("failed to find pam_models config file {}").format(config_file)
+            "failed to find pam_models config file {}".format(config_file)
         )
     return config_file
 
