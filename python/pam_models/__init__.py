@@ -1,31 +1,24 @@
+import pam_configuration
 import os
+import pathlib
 
-# config files are expected to be in /opt/mpi-is/
-_config_folder = "/opt/mpi-is/pam_models/"
-
-# return abs path to src/pam_models/config
-def get_config_folder():
-    #
-    # deprecated: in source config
-    # folder was used
-    #
-    # from catkin_pkg import workspaces
-    # packages = workspaces.get_spaces()
-    # package_path = [ p for p in packages
-    #                 if p.endswith("pam_models") ][0]
-    # return os.path.join(package_path,
-    #                    "config")
-    global _config_folder
-    return _config_folder
+_PACKAGE_NAME = "pam_models"
 
 
-def get_config_path(config):
+def get_config_folder() -> pathlib.Path:
+    prefix = pathlib.Path(pam_configuration.get_path())
+    return prefix / _PACKAGE_NAME
+
+
+def get_config_path(config: str) -> pathlib.Path:
     config_folder = get_config_folder()
-    config_file = config_folder + os.sep + config + ".json"
-    if not os.path.isfile(config_file):
-        raise FileNotFoundError("failed to find pam_models config file " + config_file)
+    config_file = config_folder / (str(config) + ".json")
+    if not config_file.is_file():
+        raise FileNotFoundError(
+            "failed to find pam_models config file {}".format(config_file)
+        )
     return config_file
 
 
-def get_default_config_path():
+def get_default_config_path() -> pathlib.Path:
     return get_config_path("hill")

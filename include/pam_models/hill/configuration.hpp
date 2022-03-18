@@ -4,6 +4,11 @@
 #include <string>
 
 #include "json_helper/json_helper.hpp"
+#include "pam_configuration/pam_configuration.hpp"
+
+// parent folder will be ~/.mpi-is/pam
+// or /opt/mpi-is/pam
+#define HILL_JSON_RELATIVE_PATH "pam_models/hill.json"
 
 namespace pam_models
 {
@@ -54,6 +59,15 @@ public:
      * Loads configuration from default json file into configuration manager.
      */
     void load_from_default_json();
+
+public:
+    /**
+     * Returns the path to the default json configuration file,
+     * i.e. either ~/.mpi-is/pam/pam_models/hill.json or
+     * /opt/mpi-is/pam/pam_models/hill.json (see the pam_configuration
+     * package)
+     */
+    static std::filesystem::path get_default_json_file();
 };
 
 }  // namespace hill
